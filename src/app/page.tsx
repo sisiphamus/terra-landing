@@ -19,9 +19,9 @@ export default function Home() {
           Get Outdoors
         </h1>
         <p className="mt-4 text-base sm:text-lg text-earth-brown/70 leading-relaxed max-w-xl">
-          The world is too vast to see from a screen. Outdoors connects you with
-          trails, open skies, and a community that believes freedom starts
-          where the road ends.
+          An agent that handles everything, so you can go do anything.
+          Emails, scheduling, research, code, busywork. Outdoors takes it
+          off your plate and gives you your life back.
         </p>
       </section>
 

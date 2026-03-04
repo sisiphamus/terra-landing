@@ -25,7 +25,7 @@ export default function Waitlist() {
         localStorage.setItem("waitlist", JSON.stringify(existing));
       }
       setStatus("success");
-      setMessage("You're on the list. We'll be in touch.");
+      setMessage("You're in. We'll reach out soon.");
       setEmail("");
     } catch {
       setStatus("error");
@@ -37,10 +37,10 @@ export default function Waitlist() {
     <section className="w-full max-w-lg mx-auto px-6 py-20">
       <div className="text-center mb-8">
         <h2 className="text-2xl sm:text-3xl text-earth-dark tracking-wide mb-3">
-          Join the Waitlist
+          Get Early Access
         </h2>
         <p className="text-sm text-earth-brown/70 leading-relaxed max-w-sm mx-auto">
-          Be the first to know when we open the gates. No spam. Just the signal.
+          We're letting people in gradually. Drop your email and we'll reach out when it's your turn.
         </p>
       </div>
 

@@ -8,25 +8,25 @@ const tabs = [
     id: "about",
     label: "About",
     content:
-      "Outdoors is a collective built on the belief that the best things in life exist beyond the pavement. We curate experiences that reconnect people with land, sky, and each other.",
+      "Outdoors is an agent that does everything you don't want to. We built it because the best hours of your day shouldn't go to inbox management and calendar shuffling. They should go to living.",
   },
   {
     id: "mission",
     label: "Mission",
     content:
-      "To dismantle the barriers between people and the outdoors. No gatekeeping. No gear lists. Just open trails and the freedom to wander at your own pace.",
+      "Give people back their time. Not with another productivity app that needs managing, but with an agent that actually does the work. You tell it what you need. It figures out the rest.",
   },
   {
     id: "story",
     label: "Story",
     content:
-      "What started as weekend hikes with friends became something bigger. We realized the outdoors shouldn't feel exclusive. This is the answer to that realization.",
+      "We were building software 80 hours a week and realized the tools meant to save us time were just creating more tasks. So we built an agent that learns how you work and takes things off your hands for real.",
   },
   {
     id: "contact",
     label: "Contact",
     content:
-      "Reach out at hello@getoutdoors.co. We read every message. If you want to collaborate, lead a trip, or just say hi, we're here.",
+      "hello@getoutdoors.co. We read every message. Whether you want early access, have a use case in mind, or just want to talk about what freedom looks like when your agent handles the rest.",
   },
 ];
 

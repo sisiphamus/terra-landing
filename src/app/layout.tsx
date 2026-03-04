@@ -9,9 +9,9 @@ const lora = Lora({
 });
 
 export const metadata: Metadata = {
-  title: "Outdoors — Get Outdoors",
+  title: "Outdoors — Your agent for everything",
   description:
-    "Where the trail meets the horizon. Join the movement to get outside.",
+    "An agent that handles everything, so you can go do anything.",
 };
 
 export default function RootLayout({

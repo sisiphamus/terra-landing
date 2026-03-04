@@ -11,12 +11,12 @@ interface Slide {
 
 // Placeholder slides — drop your images in /public/images/
 const slides: Slide[] = [
-  { src: "/images/1.jpg", caption: "The open road", color: "#7A8B6F" },
-  { src: "/images/2.jpg", caption: "Morning light", color: "#C4956A" },
-  { src: "/images/3.jpg", caption: "Still waters", color: "#5C4033" },
-  { src: "/images/4.jpg", caption: "High country", color: "#8B7355" },
-  { src: "/images/5.jpg", caption: "Wild coast", color: "#4A5D3A" },
-  { src: "/images/6.jpg", caption: "Golden hour", color: "#B47B56" },
+  { src: "/images/1.jpg", caption: "While it works, you live", color: "#7A8B6F" },
+  { src: "/images/2.jpg", caption: "Emails handled before coffee", color: "#C4956A" },
+  { src: "/images/3.jpg", caption: "Schedules that build themselves", color: "#5C4033" },
+  { src: "/images/4.jpg", caption: "Research done by morning", color: "#8B7355" },
+  { src: "/images/5.jpg", caption: "One agent, everything covered", color: "#4A5D3A" },
+  { src: "/images/6.jpg", caption: "Your time is yours again", color: "#B47B56" },
 ];
 
 const rotations = [-1.8, 1.2, -0.6, 1.5, -1.1, 0.8];
