@@ -8,25 +8,25 @@ const tabs = [
     id: "about",
     label: "About",
     content:
-      "Outdoors is an agent that does everything you don't want to. We built it because the best hours of your day shouldn't go to inbox management and calendar shuffling. They should go to living.",
+      "I keep watching people build tools that create more work than they solve. Outdoors is the opposite. It is an agent that handles everything, emails, scheduling, research, code, the stuff that eats your day so you never get to the things that actually matter. The idea is simple. Your best thinking happens when you are not drowning in tasks.",
   },
   {
     id: "mission",
     label: "Mission",
     content:
-      "Give people back their time. Not with another productivity app that needs managing, but with an agent that actually does the work. You tell it what you need. It figures out the rest.",
+      "Most productivity tools just move the burden around. You still have to manage the tool. Outdoors does the work. You say what you need, it figures out how. No dashboards to check. No workflows to configure. The point is not optimization. The point is freedom.",
   },
   {
     id: "story",
     label: "Story",
     content:
-      "We were building software 80 hours a week and realized the tools meant to save us time were just creating more tasks. So we built an agent that learns how you work and takes things off your hands for real.",
+      "We were pulling 80 hour weeks building software and realized the thing eating our time was not the hard problems. It was the coordination. The emails. The scheduling. The busywork that compounds until your entire day is someone else's agenda. So we built an agent that learns how you work and actually takes things off your hands. 23 people reached out the first day without us asking.",
   },
   {
     id: "contact",
     label: "Contact",
     content:
-      "hello@getoutdoors.co. We read every message. Whether you want early access, have a use case in mind, or just want to talk about what freedom looks like when your agent handles the rest.",
+      "at253@rice.edu. We read every message. Whether you want early access, have a use case, or just want to talk about what it looks like when your agent handles the rest.",
   },
 ];
 
