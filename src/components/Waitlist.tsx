@@ -14,25 +14,22 @@ export default function Waitlist() {
 
     setStatus("loading");
 
-    try {
-      const res = await fetch("/api/waitlist", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
+    // TODO: Connect to a real backend (Supabase, Airtable, etc.)
+    // For now, simulate success and store in localStorage
+    await new Promise((r) => setTimeout(r, 800));
 
-      if (res.ok) {
-        setStatus("success");
-        setMessage("You're on the list. We'll be in touch.");
-        setEmail("");
-      } else {
-        const data = await res.json();
-        setStatus("error");
-        setMessage(data.error || "Something went wrong. Try again.");
+    try {
+      const existing = JSON.parse(localStorage.getItem("waitlist") || "[]");
+      if (!existing.includes(email.toLowerCase())) {
+        existing.push(email.toLowerCase());
+        localStorage.setItem("waitlist", JSON.stringify(existing));
       }
+      setStatus("success");
+      setMessage("You're on the list. We'll be in touch.");
+      setEmail("");
     } catch {
       setStatus("error");
-      setMessage("Could not connect. Try again later.");
+      setMessage("Something went wrong. Try again.");
     }
   };
 
