@@ -14,15 +14,13 @@ export default function Waitlist() {
     e.preventDefault();
     if (!email.trim()) return;
 
-    // Step 1: Fold the paper
+    // Step 1: Slow fold
     setStatus("folding");
+    await new Promise((r) => setTimeout(r, 1400));
 
-    await new Promise((r) => setTimeout(r, 600));
-
-    // Step 2: Fly it off screen
+    // Step 2: Fly off
     setStatus("flying");
-
-    await new Promise((r) => setTimeout(r, 800));
+    await new Promise((r) => setTimeout(r, 1200));
 
     // Step 3: Store and confirm
     try {
@@ -54,7 +52,7 @@ export default function Waitlist() {
             key="success"
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
           >
             <p className="text-sm text-earth-dark/60 italic">{message}</p>
           </motion.div>
@@ -65,61 +63,61 @@ export default function Waitlist() {
             initial={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            {/* The "paper" that folds and flies */}
+            {/* The paper that folds and flies */}
             <motion.div
-              className="origin-bottom"
+              className="origin-bottom-left"
               animate={
                 status === "folding"
                   ? {
-                      scaleY: [1, 0.6],
-                      scaleX: [1, 0.85],
-                      rotateX: [0, 25],
-                      y: [0, 4],
+                      scaleY: [1, 0.7, 0.4, 0.15],
+                      scaleX: [1, 0.95, 0.85, 0.7],
+                      rotateX: [0, 15, 30, 45],
+                      rotateZ: [0, -1, -2, -3],
+                      y: [0, 2, 5, 8],
                     }
                   : status === "flying"
                     ? {
-                        x: [0, 20, 400],
-                        y: [4, -30, -120],
-                        rotate: [0, -8, -15],
-                        scaleX: [0.85, 0.7, 0.3],
-                        scaleY: [0.6, 0.5, 0.2],
-                        opacity: [1, 1, 0],
+                        x: [0, 40, 150, 500],
+                        y: [8, -10, -50, -160],
+                        rotate: [-3, -10, -18, -25],
+                        scaleX: [0.7, 0.5, 0.3, 0.1],
+                        scaleY: [0.15, 0.12, 0.08, 0.02],
+                        opacity: [1, 1, 0.7, 0],
                       }
                     : {}
               }
               transition={
                 status === "folding"
-                  ? { duration: 0.5, ease: "easeInOut" }
+                  ? { duration: 1.3, ease: [0.25, 0.1, 0.25, 1] }
                   : status === "flying"
-                    ? { duration: 0.7, ease: [0.4, 0, 0.2, 1] }
+                    ? { duration: 1.1, ease: [0.4, 0, 0.2, 1] }
                     : {}
               }
-              style={{ perspective: 800 }}
+              style={{ perspective: 600 }}
             >
-              {/* Paper surface */}
-              <div className="relative bg-white/80 backdrop-blur-sm border-b border-earth-brown/10">
-                <input
-                  type="email"
-                  required
-                  placeholder="your email"
-                  value={email}
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                    if (status === "error") setStatus("idle");
-                  }}
-                  disabled={isAnimating}
-                  className="w-full bg-transparent px-0 py-3 text-sm text-earth-deep
-                    placeholder:text-earth-brown/25 border-0
-                    focus:outline-none disabled:opacity-40"
-                  style={{
-                    fontFamily: "var(--font-lora), Georgia, serif",
-                    fontStyle: "italic",
-                  }}
-                />
-              </div>
+              {/* Just an input with a single gold underline */}
+              <input
+                type="email"
+                required
+                placeholder="your email"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (status === "error") setStatus("idle");
+                }}
+                disabled={isAnimating}
+                className="w-full bg-transparent px-0 py-2 text-sm text-earth-deep
+                  placeholder:text-earth-brown/25 border-0 border-b-2 border-earth-tan
+                  focus:outline-none focus:border-earth-clay
+                  disabled:opacity-40 transition-colors"
+                style={{
+                  fontFamily: "var(--font-lora), Georgia, serif",
+                  fontStyle: "italic",
+                }}
+              />
             </motion.div>
 
-            {/* Submit — just text, ultra minimal */}
+            {/* Submit text link */}
             <AnimatePresence>
               {!isAnimating && (
                 <motion.button
@@ -127,7 +125,7 @@ export default function Waitlist() {
                   disabled={!email.trim()}
                   initial={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: 0.2 }}
+                  transition={{ duration: 0.3 }}
                   className="mt-4 text-[11px] tracking-[0.2em] uppercase text-earth-brown/40
                     hover:text-earth-dark transition-colors duration-300
                     disabled:opacity-20 disabled:cursor-default
