@@ -2,7 +2,7 @@
 
 export default function Logo() {
   return (
-    <a href="/" aria-label="Terra home" className="flex items-center gap-3">
+    <a href="/" aria-label="Outdoors home" className="flex items-center gap-3">
       <svg
         width="44"
         height="44"
@@ -65,7 +65,7 @@ export default function Logo() {
       </svg>
 
       <span className="text-xl tracking-[0.25em] text-earth-dark font-semibold uppercase">
-        Terra
+        Outdoors
       </span>
     </a>
   );

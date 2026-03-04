@@ -16,10 +16,10 @@ export default function Home() {
       {/* Hero text — no animation, static */}
       <section className="px-6 sm:px-12 lg:px-20 pt-12 sm:pt-20 pb-8">
         <h1 className="text-4xl sm:text-5xl lg:text-6xl text-earth-deep tracking-wide leading-tight max-w-3xl">
-          Explore Freely
+          Get Outdoors
         </h1>
         <p className="mt-4 text-base sm:text-lg text-earth-brown/70 leading-relaxed max-w-xl">
-          The world is too vast to see from a screen. Terra connects you with
+          The world is too vast to see from a screen. Outdoors connects you with
           trails, open skies, and a community that believes freedom starts
           where the road ends.
         </p>

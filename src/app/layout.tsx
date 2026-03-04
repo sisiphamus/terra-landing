@@ -9,9 +9,9 @@ const lora = Lora({
 });
 
 export const metadata: Metadata = {
-  title: "Terra — Explore Freely",
+  title: "Outdoors — Get Outdoors",
   description:
-    "Where the trail meets the horizon. Join the movement for open exploration.",
+    "Where the trail meets the horizon. Join the movement to get outside.",
 };
 
 export default function RootLayout({

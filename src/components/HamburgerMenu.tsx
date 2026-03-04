@@ -8,7 +8,7 @@ const tabs = [
     id: "about",
     label: "About",
     content:
-      "Terra is a collective built on the belief that the best things in life exist beyond the pavement. We curate experiences that reconnect people with land, sky, and each other.",
+      "Outdoors is a collective built on the belief that the best things in life exist beyond the pavement. We curate experiences that reconnect people with land, sky, and each other.",
   },
   {
     id: "mission",
@@ -20,13 +20,13 @@ const tabs = [
     id: "story",
     label: "Story",
     content:
-      "What started as weekend hikes with friends became something bigger. We realized the outdoors shouldn't feel exclusive. Terra is the answer to that realization.",
+      "What started as weekend hikes with friends became something bigger. We realized the outdoors shouldn't feel exclusive. This is the answer to that realization.",
   },
   {
     id: "contact",
     label: "Contact",
     content:
-      "Reach out at hello@terra.earth. We read every message. If you want to collaborate, lead a trip, or just say hi, we're here.",
+      "Reach out at hello@getoutdoors.co. We read every message. If you want to collaborate, lead a trip, or just say hi, we're here.",
   },
 ];
 
