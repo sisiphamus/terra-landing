@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #F5F0E8;
+  color: #2C1810;
+}
+
+/* Lora font utility - set via next/font CSS variable */
+.font-lora {
+  font-family: var(--font-lora), Georgia, serif;
+}
+
+/* Custom scrollbar for earth tone vibe */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #F5F0E8;
+}
+::-webkit-scrollbar-thumb {
+  background: #C4956A;
+  border-radius: 3px;
+}
+
+/* Polaroid shadow */
+.polaroid-shadow {
+  box-shadow:
+    0 4px 6px -1px rgba(44, 24, 16, 0.1),
+    0 10px 20px -5px rgba(44, 24, 16, 0.15),
+    0 1px 3px rgba(44, 24, 16, 0.08);
+}
+
+/* Carousel hide scrollbar */
+.carousel-scroll {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.carousel-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Selection color */
+::selection {
+  background-color: #C4956A;
+  color: #F5F0E8;
+}
