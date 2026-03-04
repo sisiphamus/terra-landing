@@ -13,8 +13,8 @@ export default function Home() {
         <HamburgerMenu />
       </nav>
 
-      {/* Hero text — no animation, static */}
-      <section className="px-6 sm:px-12 lg:px-20 pt-12 sm:pt-20 pb-8">
+      {/* Hero text — no animation, static, pushed right */}
+      <section className="px-6 sm:px-12 lg:px-20 pt-12 sm:pt-20 pb-8 sm:ml-12 lg:ml-24">
         <h1 className="text-4xl sm:text-5xl lg:text-6xl text-earth-deep tracking-wide leading-tight max-w-3xl">
           Get Outdoors
         </h1>
@@ -25,11 +25,11 @@ export default function Home() {
         </p>
       </section>
 
+      {/* Waitlist — above carousel */}
+      <Waitlist />
+
       {/* Polaroid carousel */}
       <Carousel />
-
-      {/* Waitlist */}
-      <Waitlist />
 
       {/* Footer */}
       <div className="mt-auto">
