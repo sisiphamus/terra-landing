@@ -81,8 +81,29 @@ export default function Carousel() {
     setImgErrors((prev) => new Set(prev).add(idx));
   }, []);
 
-  // Swipe detection
-  const dragStartX = useRef(0);
+  // Swipe detection - works for both touch and mouse
+  const startX = useRef(0);
+  const startY = useRef(0);
+  const swiping = useRef(false);
+
+  const handleSwipeStart = useCallback((x: number, y: number) => {
+    startX.current = x;
+    startY.current = y;
+    swiping.current = true;
+  }, []);
+
+  const handleSwipeEnd = useCallback(
+    (x: number) => {
+      if (!swiping.current) return;
+      swiping.current = false;
+      const diff = x - startX.current;
+      if (Math.abs(diff) > 40) {
+        paginate(diff < 0 ? 1 : -1);
+        pauseAutoplay();
+      }
+    },
+    [paginate, pauseAutoplay]
+  );
 
   // Visible cards: show prev, current, next for context on desktop
   const prevIdx = (activeIndex - 1 + slides.length) % slides.length;
@@ -121,19 +142,20 @@ export default function Carousel() {
             />
           </div>
 
-          {/* Center card with animation */}
+          {/* Center card with swipe support */}
           <div
             className="relative shrink-0"
-            style={{ width: 280, height: 400 }}
-            onPointerDown={(e) => {
-              dragStartX.current = e.clientX;
+            style={{ width: 280, height: 400, touchAction: "pan-y" }}
+            onMouseDown={(e) => handleSwipeStart(e.clientX, e.clientY)}
+            onMouseUp={(e) => handleSwipeEnd(e.clientX)}
+            onMouseLeave={() => { swiping.current = false; }}
+            onTouchStart={(e) => {
+              const t = e.touches[0];
+              handleSwipeStart(t.clientX, t.clientY);
             }}
-            onPointerUp={(e) => {
-              const diff = e.clientX - dragStartX.current;
-              if (Math.abs(diff) > 50) {
-                paginate(diff < 0 ? 1 : -1);
-                pauseAutoplay();
-              }
+            onTouchEnd={(e) => {
+              const t = e.changedTouches[0];
+              handleSwipeEnd(t.clientX);
             }}
           >
             <AnimatePresence initial={false} custom={direction} mode="popLayout">
