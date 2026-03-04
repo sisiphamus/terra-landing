@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef, useState, useEffect, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 
 interface Slide {
@@ -22,212 +21,92 @@ const slides: Slide[] = [
 
 const rotations = [-1.8, 1.2, -0.6, 1.5, -1.1, 0.8];
 
-const swipeVariants = {
-  enter: (dir: number) => ({
-    x: dir > 0 ? 300 : -300,
-    opacity: 0,
-    scale: 0.9,
-  }),
-  center: {
-    x: 0,
-    opacity: 1,
-    scale: 1,
-  },
-  exit: (dir: number) => ({
-    x: dir > 0 ? -300 : 300,
-    opacity: 0,
-    scale: 0.9,
-  }),
-};
+// Duplicate slides for seamless infinite loop
+const loopedSlides = [...slides, ...slides];
 
 export default function Carousel() {
-  const [[activeIndex, direction], setPage] = useState([0, 0]);
+  const trackRef = useRef<HTMLDivElement>(null);
   const [imgErrors, setImgErrors] = useState<Set<number>>(new Set());
-  const [autoplay, setAutoplay] = useState(true);
-  const autoplayRef = useRef(autoplay);
-  autoplayRef.current = autoplay;
-
-  const paginate = useCallback(
-    (newDir: number) => {
-      setPage(([prev]) => {
-        const next = (prev + newDir + slides.length) % slides.length;
-        return [next, newDir];
-      });
-    },
-    []
-  );
-
-  const goTo = useCallback((idx: number) => {
-    setPage(([prev]) => [idx, idx > prev ? 1 : -1]);
-  }, []);
-
-  // Autoplay
-  useEffect(() => {
-    if (!autoplay) return;
-    const interval = setInterval(() => {
-      if (autoplayRef.current) paginate(1);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, [autoplay, paginate]);
-
-  // Pause autoplay on interaction, resume after 10s
-  const pauseAutoplay = useCallback(() => {
-    setAutoplay(false);
-    const timer = setTimeout(() => setAutoplay(true), 10000);
-    return () => clearTimeout(timer);
-  }, []);
+  const animRef = useRef<number>(0);
+  const offsetRef = useRef(0);
+  const speedRef = useRef(0.5); // pixels per frame
+  const [paused, setPaused] = useState(false);
+  const pausedRef = useRef(false);
+  pausedRef.current = paused;
 
   const handleImgError = useCallback((idx: number) => {
-    setImgErrors((prev) => new Set(prev).add(idx));
+    setImgErrors((prev) => new Set(prev).add(idx % slides.length));
   }, []);
 
-  // Swipe detection - works for both touch and mouse
-  const startX = useRef(0);
-  const startY = useRef(0);
-  const swiping = useRef(false);
+  // Continuous scroll animation
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
 
-  const handleSwipeStart = useCallback((x: number, y: number) => {
-    startX.current = x;
-    startY.current = y;
-    swiping.current = true;
-  }, []);
-
-  const handleSwipeEnd = useCallback(
-    (x: number) => {
-      if (!swiping.current) return;
-      swiping.current = false;
-      const diff = x - startX.current;
-      if (Math.abs(diff) > 40) {
-        paginate(diff < 0 ? 1 : -1);
-        pauseAutoplay();
+    // Measure half the track (one full set of slides)
+    const measureHalf = () => {
+      const children = track.children;
+      let w = 0;
+      for (let i = 0; i < slides.length; i++) {
+        w += (children[i] as HTMLElement).offsetWidth + 28; // 28px gap
       }
-    },
-    [paginate, pauseAutoplay]
-  );
+      return w;
+    };
 
-  // Visible cards: show prev, current, next for context on desktop
-  const prevIdx = (activeIndex - 1 + slides.length) % slides.length;
-  const nextIdx = (activeIndex + 1) % slides.length;
+    let halfWidth = 0;
+    // Wait a frame for layout
+    requestAnimationFrame(() => {
+      halfWidth = measureHalf();
+    });
+
+    const tick = () => {
+      if (!pausedRef.current) {
+        offsetRef.current += speedRef.current;
+        // Reset when we've scrolled past the first set
+        if (halfWidth > 0 && offsetRef.current >= halfWidth) {
+          offsetRef.current -= halfWidth;
+        }
+        track.style.transform = `translate3d(-${offsetRef.current}px, 0, 0)`;
+      }
+      animRef.current = requestAnimationFrame(tick);
+    };
+
+    animRef.current = requestAnimationFrame(tick);
+
+    const handleResize = () => {
+      halfWidth = measureHalf();
+    };
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      cancelAnimationFrame(animRef.current);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   return (
-    <section className="w-full py-4">
-      {/* Main carousel area */}
-      <div className="relative flex items-center justify-center px-4 sm:px-12">
-        {/* Prev button */}
-        <button
-          onClick={() => {
-            paginate(-1);
-            pauseAutoplay();
-          }}
-          className="hidden sm:flex absolute left-4 lg:left-12 z-10 w-10 h-10 items-center justify-center
-            bg-earth-cream/80 border border-earth-brown/15 rounded-full
-            hover:bg-earth-sand transition-colors"
-          aria-label="Previous"
-        >
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#5C4033" strokeWidth="1.5">
-            <path d="M10 3L5 8L10 13" />
-          </svg>
-        </button>
-
-        {/* Cards container */}
-        <div className="flex items-center justify-center gap-4 sm:gap-6 w-full max-w-4xl mx-auto overflow-hidden">
-          {/* Side card left - hidden on mobile */}
-          <div className="hidden lg:block shrink-0 opacity-40 scale-90 -rotate-2">
-            <PolaroidCard
-              slide={slides[prevIdx]}
-              hasError={imgErrors.has(prevIdx)}
-              onImgError={() => handleImgError(prevIdx)}
-              rotation={rotations[prevIdx % rotations.length]}
-              size="small"
-            />
-          </div>
-
-          {/* Center card with swipe support */}
-          <div
-            className="relative shrink-0"
-            style={{ width: 280, height: 400, touchAction: "pan-y" }}
-            onMouseDown={(e) => handleSwipeStart(e.clientX, e.clientY)}
-            onMouseUp={(e) => handleSwipeEnd(e.clientX)}
-            onMouseLeave={() => { swiping.current = false; }}
-            onTouchStart={(e) => {
-              const t = e.touches[0];
-              handleSwipeStart(t.clientX, t.clientY);
-            }}
-            onTouchEnd={(e) => {
-              const t = e.changedTouches[0];
-              handleSwipeEnd(t.clientX);
-            }}
-          >
-            <AnimatePresence initial={false} custom={direction} mode="popLayout">
-              <motion.div
-                key={activeIndex}
-                custom={direction}
-                variants={swipeVariants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                transition={{
-                  x: { type: "spring", stiffness: 200, damping: 25 },
-                  opacity: { duration: 0.3 },
-                  scale: { duration: 0.3 },
-                }}
-                className="absolute inset-0"
-              >
-                <PolaroidCard
-                  slide={slides[activeIndex]}
-                  hasError={imgErrors.has(activeIndex)}
-                  onImgError={() => handleImgError(activeIndex)}
-                  rotation={rotations[activeIndex % rotations.length]}
-                  size="large"
-                />
-              </motion.div>
-            </AnimatePresence>
-          </div>
-
-          {/* Side card right - hidden on mobile */}
-          <div className="hidden lg:block shrink-0 opacity-40 scale-90 rotate-2">
-            <PolaroidCard
-              slide={slides[nextIdx]}
-              hasError={imgErrors.has(nextIdx)}
-              onImgError={() => handleImgError(nextIdx)}
-              rotation={rotations[nextIdx % rotations.length]}
-              size="small"
-            />
-          </div>
-        </div>
-
-        {/* Next button */}
-        <button
-          onClick={() => {
-            paginate(1);
-            pauseAutoplay();
-          }}
-          className="hidden sm:flex absolute right-4 lg:right-12 z-10 w-10 h-10 items-center justify-center
-            bg-earth-cream/80 border border-earth-brown/15 rounded-full
-            hover:bg-earth-sand transition-colors"
-          aria-label="Next"
-        >
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#5C4033" strokeWidth="1.5">
-            <path d="M6 3L11 8L6 13" />
-          </svg>
-        </button>
-      </div>
-
-      {/* Dot indicators */}
-      <div className="flex items-center justify-center gap-2 mt-6">
-        {slides.map((_, i) => (
-          <button
+    <section
+      className="w-full overflow-hidden py-4"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onTouchStart={() => setPaused(true)}
+      onTouchEnd={() => {
+        // Resume after a short delay so it doesn't jerk
+        setTimeout(() => setPaused(false), 2000);
+      }}
+    >
+      <div
+        ref={trackRef}
+        className="flex will-change-transform"
+        style={{ gap: 28 }}
+      >
+        {loopedSlides.map((slide, i) => (
+          <PolaroidCard
             key={i}
-            onClick={() => {
-              goTo(i);
-              pauseAutoplay();
-            }}
-            className={`rounded-full transition-all duration-300 ${
-              i === activeIndex
-                ? "w-6 h-2 bg-earth-tan"
-                : "w-2 h-2 bg-earth-brown/25 hover:bg-earth-brown/40"
-            }`}
-            aria-label={`Go to slide ${i + 1}`}
+            slide={slide}
+            hasError={imgErrors.has(i % slides.length)}
+            onImgError={() => handleImgError(i)}
+            rotation={rotations[i % rotations.length]}
           />
         ))}
       </div>
@@ -240,21 +119,17 @@ function PolaroidCard({
   hasError,
   onImgError,
   rotation,
-  size,
 }: {
   slide: Slide;
   hasError: boolean;
   onImgError: () => void;
   rotation: number;
-  size: "small" | "large";
 }) {
-  const w = size === "large" ? 280 : 220;
-
   return (
     <div
-      className="polaroid-shadow select-none"
+      className="shrink-0 polaroid-shadow select-none"
       style={{
-        width: w,
+        width: 260,
         transform: `rotate(${rotation}deg)`,
       }}
     >
@@ -271,7 +146,7 @@ function PolaroidCard({
               src={slide.src}
               alt={slide.caption}
               fill
-              sizes={`${w}px`}
+              sizes="260px"
               className="object-cover"
               draggable={false}
               onError={onImgError}
