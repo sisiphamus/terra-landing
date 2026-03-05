@@ -7,29 +7,29 @@ interface Slide {
   src: string;
   caption: string;
   color: string;
+  hoverColor: string;
 }
 
 const slides: Slide[] = [
-  { src: "/images/20251004_144654.webp", caption: "I was refactoring my codebase", color: "#7A8B6F" },
-  { src: "/images/20251010_230345.webp", caption: "I was applying to jobs", color: "#C4956A" },
-  { src: "/images/20251015_205903.webp", caption: "I was doing research", color: "#5C4033" },
-  { src: "/images/20251025_183812 (1).webp", caption: "I was writing my thesis", color: "#8B7355" },
-  { src: "/images/20251026_022124.webp", caption: "I was scheduling meetings", color: "#4A5D3A" },
-  { src: "/images/20251122_213844.webp", caption: "I was summarizing lecture notes", color: "#B47B56" },
-  { src: "/images/20251127_083555.webp", caption: "I was debugging a pipeline", color: "#6B7F5E" },
-  { src: "/images/20251214_163214.webp", caption: "I was drafting cold emails", color: "#9C7B5B" },
-  { src: "/images/20251230_080722.webp", caption: "I was organizing my files", color: "#5A6B4A" },
-  { src: "/images/20260206_180352 (1).webp", caption: "I was deploying to production", color: "#A0805A" },
-  { src: "/images/IMG-20251018-WA0062.webp", caption: "I was reviewing pull requests", color: "#6E8060" },
-  { src: "/images/IMG-20251228-WA0106.webp", caption: "I was analyzing datasets", color: "#8A6E50" },
-  { src: "/images/IMG1186621390301352295.webp", caption: "I was filling out applications", color: "#4E6340" },
-  { src: "/images/IMG2068871883117059041 (1).webp", caption: "I was building a landing page", color: "#7B6548" },
-  { src: "/images/IMG_7475 (1).webp", caption: "I was catching up on emails", color: "#5B7050" },
+  { src: "/images/20251004_144654.webp", caption: "I was refactoring my codebase", color: "#7A8B6F", hoverColor: "#A3B595" },
+  { src: "/images/20251010_230345.webp", caption: "I was applying to jobs", color: "#C4956A", hoverColor: "#D4B08A" },
+  { src: "/images/20251015_205903.webp", caption: "I was doing research", color: "#5C4033", hoverColor: "#8B6B5A" },
+  { src: "/images/20251025_183812 (1).webp", caption: "I was writing my thesis", color: "#8B7355", hoverColor: "#B39B7A" },
+  { src: "/images/20251026_022124.webp", caption: "I was scheduling meetings", color: "#4A5D3A", hoverColor: "#6E8A58" },
+  { src: "/images/20251122_213844.webp", caption: "I was summarizing lecture notes", color: "#B47B56", hoverColor: "#C99A78" },
+  { src: "/images/20251127_083555.webp", caption: "I was debugging a pipeline", color: "#6B7F5E", hoverColor: "#8FA882" },
+  { src: "/images/20251214_163214.webp", caption: "I was drafting cold emails", color: "#9C7B5B", hoverColor: "#BDA07E" },
+  { src: "/images/20251230_080722.webp", caption: "I was organizing my files", color: "#5A6B4A", hoverColor: "#7E9468" },
+  { src: "/images/20260206_180352 (1).webp", caption: "I was deploying to production", color: "#A0805A", hoverColor: "#C4A57E" },
+  { src: "/images/IMG-20251018-WA0062.webp", caption: "I was reviewing pull requests", color: "#6E8060", hoverColor: "#92A884" },
+  { src: "/images/IMG-20251228-WA0106.webp", caption: "I was analyzing datasets", color: "#8A6E50", hoverColor: "#AD9272" },
+  { src: "/images/IMG1186621390301352295.webp", caption: "I was filling out applications", color: "#4E6340", hoverColor: "#728C62" },
+  { src: "/images/IMG2068871883117059041 (1).webp", caption: "I was building a landing page", color: "#7B6548", hoverColor: "#A08A6A" },
+  { src: "/images/IMG_7475 (1).webp", caption: "I was catching up on emails", color: "#5B7050", hoverColor: "#7E9670" },
 ];
 
 const rotations = [-1.8, 1.2, -0.6, 1.5, -1.1, 0.8, -1.3, 0.9, -0.4, 1.7, -1.0, 0.5, -1.6, 1.3, -0.7];
 
-// Duplicate slides for seamless infinite loop
 const loopedSlides = [...slides, ...slides];
 
 export default function Carousel() {
@@ -37,45 +37,36 @@ export default function Carousel() {
   const [imgErrors, setImgErrors] = useState<Set<number>>(new Set());
   const animRef = useRef<number>(0);
   const offsetRef = useRef(0);
-  const speedRef = useRef(1.5); // pixels per frame
-  const [paused, setPaused] = useState(false);
-  const pausedRef = useRef(false);
-  pausedRef.current = paused;
+  const speedRef = useRef(2.5);
 
   const handleImgError = useCallback((idx: number) => {
     setImgErrors((prev) => new Set(prev).add(idx % slides.length));
   }, []);
 
-  // Continuous scroll animation
   useEffect(() => {
     const track = trackRef.current;
     if (!track) return;
 
-    // Measure half the track (one full set of slides)
     const measureHalf = () => {
       const children = track.children;
       let w = 0;
       for (let i = 0; i < slides.length; i++) {
-        w += (children[i] as HTMLElement).offsetWidth + 28; // 28px gap
+        w += (children[i] as HTMLElement).offsetWidth + 28;
       }
       return w;
     };
 
     let halfWidth = 0;
-    // Wait a frame for layout
     requestAnimationFrame(() => {
       halfWidth = measureHalf();
     });
 
     const tick = () => {
-      if (!pausedRef.current) {
-        offsetRef.current += speedRef.current;
-        // Reset when we've scrolled past the first set
-        if (halfWidth > 0 && offsetRef.current >= halfWidth) {
-          offsetRef.current -= halfWidth;
-        }
-        track.style.transform = `translate3d(-${offsetRef.current}px, 0, 0)`;
+      offsetRef.current += speedRef.current;
+      if (halfWidth > 0 && offsetRef.current >= halfWidth) {
+        offsetRef.current -= halfWidth;
       }
+      track.style.transform = `translate3d(-${offsetRef.current}px, 0, 0)`;
       animRef.current = requestAnimationFrame(tick);
     };
 
@@ -93,16 +84,7 @@ export default function Carousel() {
   }, []);
 
   return (
-    <section
-      className="w-full overflow-hidden py-4"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onTouchStart={() => setPaused(true)}
-      onTouchEnd={() => {
-        // Resume after a short delay so it doesn't jerk
-        setTimeout(() => setPaused(false), 2000);
-      }}
-    >
+    <section className="w-full overflow-hidden py-4">
       <div
         ref={trackRef}
         className="flex will-change-transform"
@@ -133,6 +115,22 @@ function PolaroidCard({
   onImgError: () => void;
   rotation: number;
 }) {
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const [hoverOrigin, setHoverOrigin] = useState({ x: 50, y: 50 });
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseEnter = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    setHoverOrigin({ x, y });
+    setIsHovered(true);
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    setIsHovered(false);
+  }, []);
+
   return (
     <div
       className="shrink-0 polaroid-shadow select-none"
@@ -148,6 +146,8 @@ function PolaroidCard({
             aspectRatio: "4/5",
             backgroundColor: slide.color,
           }}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
         >
           {!hasError ? (
             <Image
@@ -183,6 +183,20 @@ function PolaroidCard({
               </div>
             </div>
           )}
+
+          <div
+            ref={overlayRef}
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: `radial-gradient(circle at ${hoverOrigin.x}% ${hoverOrigin.y}%, ${slide.hoverColor}cc 0%, transparent 70%)`,
+              opacity: isHovered ? 1 : 0,
+              transform: isHovered ? "scale(1)" : "scale(0.3)",
+              transformOrigin: `${hoverOrigin.x}% ${hoverOrigin.y}%`,
+              transition: isHovered
+                ? "opacity 0.4s ease-out, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)"
+                : "opacity 0.3s ease-in, transform 0.3s ease-in",
+            }}
+          />
         </div>
 
         <p className="absolute bottom-3 left-3 right-3 text-center text-xs tracking-[0.1em] text-earth-brown/70 italic">
