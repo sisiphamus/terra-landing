@@ -40,6 +40,7 @@ export default function Carousel() {
   const baseSpeedRef = useRef(1.75);
   const speedRef = useRef(1.75);
   const hoveredRef = useRef(false);
+  const isMobileRef = useRef(false);
 
   const handleImgError = useCallback((idx: number) => {
     setImgErrors((prev) => new Set(prev).add(idx % slides.length));
@@ -50,8 +51,9 @@ export default function Carousel() {
     if (!track) return;
 
     const isMobile = window.matchMedia("(max-width: 768px)").matches;
-    baseSpeedRef.current = isMobile ? 2.1 : 1.75;
+    baseSpeedRef.current = isMobile ? 2 : 1.75;
     speedRef.current = baseSpeedRef.current;
+    isMobileRef.current = isMobile;
 
     const measureHalf = () => {
       const children = track.children;
@@ -68,7 +70,7 @@ export default function Carousel() {
     });
 
     const tick = () => {
-      const target = hoveredRef.current ? 1 : baseSpeedRef.current;
+      const target = (!isMobileRef.current && hoveredRef.current) ? 1 : baseSpeedRef.current;
       speedRef.current += (target - speedRef.current) * 0.08;
       offsetRef.current += speedRef.current;
       if (halfWidth > 0 && offsetRef.current >= halfWidth) {
@@ -82,7 +84,8 @@ export default function Carousel() {
 
     const handleResize = () => {
       const mobile = window.matchMedia("(max-width: 768px)").matches;
-      baseSpeedRef.current = mobile ? 2.1 : 1.75;
+      isMobileRef.current = mobile;
+      baseSpeedRef.current = mobile ? 2 : 1.75;
       halfWidth = measureHalf();
     };
     window.addEventListener("resize", handleResize);
