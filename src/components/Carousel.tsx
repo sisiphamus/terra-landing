@@ -37,7 +37,9 @@ export default function Carousel() {
   const [imgErrors, setImgErrors] = useState<Set<number>>(new Set());
   const animRef = useRef<number>(0);
   const offsetRef = useRef(0);
-  const speedRef = useRef(2.5);
+  const baseSpeedRef = useRef(1.75);
+  const speedRef = useRef(1.75);
+  const hoveredRef = useRef(false);
 
   const handleImgError = useCallback((idx: number) => {
     setImgErrors((prev) => new Set(prev).add(idx % slides.length));
@@ -46,6 +48,10 @@ export default function Carousel() {
   useEffect(() => {
     const track = trackRef.current;
     if (!track) return;
+
+    const isMobile = window.matchMedia("(max-width: 768px)").matches;
+    baseSpeedRef.current = isMobile ? 2.1 : 1.75;
+    speedRef.current = baseSpeedRef.current;
 
     const measureHalf = () => {
       const children = track.children;
@@ -62,6 +68,8 @@ export default function Carousel() {
     });
 
     const tick = () => {
+      const target = hoveredRef.current ? 1 : baseSpeedRef.current;
+      speedRef.current += (target - speedRef.current) * 0.08;
       offsetRef.current += speedRef.current;
       if (halfWidth > 0 && offsetRef.current >= halfWidth) {
         offsetRef.current -= halfWidth;
@@ -73,6 +81,8 @@ export default function Carousel() {
     animRef.current = requestAnimationFrame(tick);
 
     const handleResize = () => {
+      const mobile = window.matchMedia("(max-width: 768px)").matches;
+      baseSpeedRef.current = mobile ? 2.1 : 1.75;
       halfWidth = measureHalf();
     };
     window.addEventListener("resize", handleResize);
@@ -81,6 +91,10 @@ export default function Carousel() {
       cancelAnimationFrame(animRef.current);
       window.removeEventListener("resize", handleResize);
     };
+  }, []);
+
+  const onCardHover = useCallback((hovered: boolean) => {
+    hoveredRef.current = hovered;
   }, []);
 
   return (
@@ -97,6 +111,7 @@ export default function Carousel() {
             hasError={imgErrors.has(i % slides.length)}
             onImgError={() => handleImgError(i)}
             rotation={rotations[i % rotations.length]}
+            onHover={onCardHover}
           />
         ))}
       </div>
@@ -109,13 +124,14 @@ function PolaroidCard({
   hasError,
   onImgError,
   rotation,
+  onHover,
 }: {
   slide: Slide;
   hasError: boolean;
   onImgError: () => void;
   rotation: number;
+  onHover: (hovered: boolean) => void;
 }) {
-  const overlayRef = useRef<HTMLDivElement>(null);
   const [hoverOrigin, setHoverOrigin] = useState({ x: 50, y: 50 });
   const [isHovered, setIsHovered] = useState(false);
 
@@ -125,29 +141,55 @@ function PolaroidCard({
     const y = ((e.clientY - rect.top) / rect.height) * 100;
     setHoverOrigin({ x, y });
     setIsHovered(true);
-  }, []);
+    onHover(true);
+  }, [onHover]);
 
   const handleMouseLeave = useCallback(() => {
     setIsHovered(false);
-  }, []);
+    onHover(false);
+  }, [onHover]);
 
   return (
     <div
-      className="shrink-0 polaroid-shadow select-none"
+      className="shrink-0 polaroid-shadow select-none relative"
       style={{
         width: 260,
         transform: `rotate(${rotation}deg)`,
       }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
-      <div className="bg-white p-3 pb-12 relative">
+      <div className="bg-white p-3 pb-12 relative overflow-hidden" style={{ borderRadius: 2 }}>
+        {/* Glow overlay on the polaroid frame (outside the image) */}
+        <div
+          className="absolute inset-0 pointer-events-none z-10"
+          style={{
+            background: `radial-gradient(circle at ${hoverOrigin.x}% ${hoverOrigin.y}%, ${slide.hoverColor}bb 0%, transparent 65%)`,
+            opacity: isHovered ? 1 : 0,
+            transform: isHovered ? "scale(1)" : "scale(0.3)",
+            transformOrigin: `${hoverOrigin.x}% ${hoverOrigin.y}%`,
+            transition: isHovered
+              ? "opacity 0.4s ease-out, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)"
+              : "opacity 0.3s ease-in, transform 0.3s ease-in",
+            WebkitMaskImage: "linear-gradient(#fff 0 0), linear-gradient(#fff 0 0)",
+            WebkitMaskSize: "100% 100%, 100% 100%",
+            WebkitMaskPosition: "0 0, 0 0",
+            WebkitMaskComposite: "xor",
+            maskImage: "linear-gradient(#fff 0 0), linear-gradient(#fff 0 0)",
+            maskSize: "100% 100%, 100% 100%",
+            maskComposite: "exclude",
+            padding: "12px 12px 48px 12px",
+            WebkitMaskOrigin: "content-box, border-box",
+            maskOrigin: "content-box, border-box",
+          }}
+        />
+
         <div
           className="relative w-full overflow-hidden"
           style={{
             aspectRatio: "4/5",
             backgroundColor: slide.color,
           }}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
         >
           {!hasError ? (
             <Image
@@ -183,20 +225,6 @@ function PolaroidCard({
               </div>
             </div>
           )}
-
-          <div
-            ref={overlayRef}
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background: `radial-gradient(circle at ${hoverOrigin.x}% ${hoverOrigin.y}%, ${slide.hoverColor}cc 0%, transparent 70%)`,
-              opacity: isHovered ? 1 : 0,
-              transform: isHovered ? "scale(1)" : "scale(0.3)",
-              transformOrigin: `${hoverOrigin.x}% ${hoverOrigin.y}%`,
-              transition: isHovered
-                ? "opacity 0.4s ease-out, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)"
-                : "opacity 0.3s ease-in, transform 0.3s ease-in",
-            }}
-          />
         </div>
 
         <p className="absolute bottom-3 left-3 right-3 text-center text-xs tracking-[0.1em] text-earth-brown/70 italic">
