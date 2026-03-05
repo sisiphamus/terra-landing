@@ -11,21 +11,21 @@ interface Slide {
 }
 
 const slides: Slide[] = [
-  { src: "/images/20251004_144654.webp", caption: "I was launching a startup", color: "#7A8B6F", hoverColor: "#A3B595" },
-  { src: "/images/20251010_230345.webp", caption: "I was applying to jobs", color: "#C4956A", hoverColor: "#D4B08A" },
-  { src: "/images/20251015_205903.webp", caption: "I was writing a research paper", color: "#5C4033", hoverColor: "#8B6B5A" },
-  { src: "/images/20251025_183812 (1).webp", caption: "I was writing my thesis", color: "#8B7355", hoverColor: "#B39B7A" },
-  { src: "/images/20251026_022124.webp", caption: "I was planning a product launch", color: "#4A5D3A", hoverColor: "#6E8A58" },
-  { src: "/images/20251122_213844.webp", caption: "I was studying for finals", color: "#B47B56", hoverColor: "#C99A78" },
-  { src: "/images/20251127_083555.webp", caption: "I was booking a last-minute trip", color: "#6B7F5E", hoverColor: "#8FA882" },
-  { src: "/images/20251214_163214.webp", caption: "I was closing a deal", color: "#9C7B5B", hoverColor: "#BDA07E" },
-  { src: "/images/20251230_080722.webp", caption: "I was filing my taxes", color: "#5A6B4A", hoverColor: "#7E9468" },
-  { src: "/images/20260206_180352 (1).webp", caption: "I was organizing a fundraiser", color: "#A0805A", hoverColor: "#C4A57E" },
-  { src: "/images/IMG-20251018-WA0062.webp", caption: "I was disputing a charge", color: "#6E8060", hoverColor: "#92A884" },
-  { src: "/images/IMG-20251228-WA0106.webp", caption: "I was comparing insurance quotes", color: "#8A6E50", hoverColor: "#AD9272" },
-  { src: "/images/IMG1186621390301352295.webp", caption: "I was filling out applications", color: "#4E6340", hoverColor: "#728C62" },
+  { src: "/images/20251004_144654.webp", caption: "I was applying to 30 internships", color: "#7A8B6F", hoverColor: "#A3B595" },
+  { src: "/images/20251010_230345.webp", caption: "I was writing a 20-page research paper", color: "#C4956A", hoverColor: "#D4B08A" },
+  { src: "/images/20251015_205903.webp", caption: "I was building a pitch deck from scratch", color: "#5C4033", hoverColor: "#8B6B5A" },
+  { src: "/images/20251025_183812 (1).webp", caption: "I was studying for 4 finals in 3 days", color: "#8B7355", hoverColor: "#B39B7A" },
+  { src: "/images/20251026_022124.webp", caption: "I was cold emailing 50 investors", color: "#4A5D3A", hoverColor: "#6E8A58" },
+  { src: "/images/20251122_213844.webp", caption: "I was finishing my thesis", color: "#B47B56", hoverColor: "#C99A78" },
+  { src: "/images/20251127_083555.webp", caption: "I was redesigning my entire portfolio", color: "#6B7F5E", hoverColor: "#8FA882" },
+  { src: "/images/20251214_163214.webp", caption: "I was prepping for a case competition", color: "#9C7B5B", hoverColor: "#BDA07E" },
+  { src: "/images/20251230_080722.webp", caption: "I was launching a side project", color: "#5A6B4A", hoverColor: "#7E9468" },
+  { src: "/images/20260206_180352 (1).webp", caption: "I was outlining a grant proposal", color: "#A0805A", hoverColor: "#C4A57E" },
+  { src: "/images/IMG-20251018-WA0062.webp", caption: "I was editing a short film", color: "#6E8060", hoverColor: "#92A884" },
+  { src: "/images/IMG-20251228-WA0106.webp", caption: "I was organizing a hackathon", color: "#8A6E50", hoverColor: "#AD9272" },
+  { src: "/images/IMG1186621390301352295.webp", caption: "I was filling out scholarship applications", color: "#4E6340", hoverColor: "#728C62" },
   { src: "/images/IMG2068871883117059041 (1).webp", caption: "I was building an app from scratch", color: "#7B6548", hoverColor: "#A08A6A" },
-  { src: "/images/IMG_7475 (1).webp", caption: "I was scheduling every meeting this week", color: "#5B7050", hoverColor: "#7E9670" },
+  { src: "/images/IMG_7475 (1).webp", caption: "I was rewriting my resume for the 5th time", color: "#5B7050", hoverColor: "#7E9670" },
 ];
 
 const rotations = [-1.8, 1.2, -0.6, 1.5, -1.1, 0.8, -1.3, 0.9, -0.4, 1.7, -1.0, 0.5, -1.6, 1.3, -0.7];
